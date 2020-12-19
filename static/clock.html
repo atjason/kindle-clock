@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Clock</title>
+
+  <style>
+    body {
+      color: #000000;
+      background-color: #ffffff;
+    }
+
+    .page {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .time {
+      flex-grow: 1;
+      margin-top: 10%;
+      font-size: 12.4em;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page" onclick="toggleTime()">
+    <div>
+      <div class="time" id="time">00:00:00</div>
+      <!-- <span id="error"></span> -->
+    </div>
+  </div>
+
+
+  <script>
+    const interval = 2000 // 2s
+    var timeoutHandler = undefined
+    var timeOffset = 0
+    var showSecond = true
+
+    function toggleTime() {
+      showSecond = !showSecond
+      update()
+    }
+
+    function format(str) {
+      return ('0' + str).slice(-2)
+    }
+
+    function update() {
+      // Adjust local time via time offset.
+      const date = new Date(Date.now() + timeOffset)
+
+      // Add timezone offset for GMT+8.
+      const utc8DiffMinutes = date.getTimezoneOffset() + 480
+      date.setMinutes(date.getMinutes() + utc8DiffMinutes)
+
+      // Set time sting.
+      const hours = format(date.getHours())
+      const minutes = format(date.getMinutes())
+      const seconds = format(date.getSeconds())
+      var timeString = hours + ':' + minutes
+      if (showSecond) timeString += ':' + seconds
+      document.getElementById("time").innerHTML = timeString
+      // console.log('Update at', date)
+
+      // Looply update time.
+      const timestamp = date.getTime()
+      // Round to interval, e.g., 2s.
+      const later = Math.floor((timestamp + interval) / interval) * interval
+      var diff = later - timestamp
+      // Reduce refresh frequency if don't show second.
+      if (!showSecond) diff += (60 - date.getSeconds()) * 1000
+      clearTimeout(timeoutHandler)
+      timeoutHandler = setTimeout("update()", diff)
+    }
+
+    update()
+
+    function httpGet(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+      xmlHttp.send( null );
+      return xmlHttp.responseText;
+    }
+
+    function filetime2Unixtime(filetime) {
+      const epoch_diff = 116444736000000000;
+      const rate_diff = 10000;
+      return parseInt((parseInt(filetime) - epoch_diff)/rate_diff);
+    }
+
+    function calcTimeOffset() {
+      const startTime = Date.now()
+      const timeUrl = 'http://worldclockapi.com/api/json/utc/now'
+      const resultStr = httpGet(timeUrl)
+      // Seems Kindle 4 doesn't support JSON.parse
+      // const result = JSON.parse(resultStr)
+      // const fileTime = result.currentFileTime
+      const fileTime = resultStr.substr(167, 18)
+      const networkTimestamp = filetime2Unixtime(fileTime)
+      const networkDelay = (Date.now() - startTime) / 2
+      return (networkTimestamp - startTime) - networkDelay
+    }
+
+    try {
+      // Get current network time, and calc time offset with local time.
+      timeOffset = calcTimeOffset() || 0
+    } catch(e) {
+      const errorString = JSON.stringify(e)
+      document.getElementById("error").innerHTML = errorString
+    }
+
+  </script>
+</body>
+
+</html>
