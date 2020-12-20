@@ -100,7 +100,7 @@
 
     function calcTimeOffset() {
       const startTime = Date.now()
-      const timeUrl = 'http://worldclockapi.com/api/json/utc/now'
+      const timeUrl = 'http://worldclockapi.com/api/json/cst/now'
       const resultStr = httpGet(timeUrl)
       // Seems Kindle 4 doesn't support JSON.parse
       // const result = JSON.parse(resultStr)
