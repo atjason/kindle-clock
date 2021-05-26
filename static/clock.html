@@ -119,6 +119,15 @@
       document.getElementById("error").innerHTML = errorString
     }
 
+    document.addEventListener("keydown", keydown);
+    function keydown(event){
+      if (event.keyCode == 17) { // Keyboard key in Kindle 4.
+        timeOffset -= 1000
+      } else if (event.keyCode == 18) { // Menu key in Kindle 4.
+        timeOffset += 1000
+      }
+    }
+
   </script>
 </body>
 
