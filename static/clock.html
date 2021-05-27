@@ -46,10 +46,21 @@
     var timeOffset = 0
     var showSecond = true
 
+    function setTimeout2(fn, timeout) {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = () => {
+        // if (xhr.readyState === 4 && xhr.status === 200) fn();
+        if (xhr.readyState === 4) fn();
+      }
+      xhr.open('get', 'https://httpstat.us/200?sleep=' + timeout);
+      xhr.send();
+    }
+
     function toggleBackgroundColor() {
       const style = document.body.style
       style.backgroundColor = 'black'
-      setTimeout(() => {
+      const timeout = setTimeout || setTimeout2
+      timeout(() => {
         style.backgroundColor = 'white'
       }, 1000)
     }
