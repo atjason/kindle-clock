@@ -46,8 +46,17 @@
     var timeOffset = 0
     var showSecond = true
 
+    function toggleBackgroundColor() {
+      const style = document.body.style
+      style.backgroundColor = 'black'
+      setTimeout(() => {
+        style.backgroundColor = 'white'
+      }, 1000)
+    }
+
     function toggleTime() {
       showSecond = !showSecond
+      if (!showSecond) toggleBackgroundColor()
       update()
     }
 
@@ -71,6 +80,11 @@
       if (showSecond) timeString += ':' + seconds
       document.getElementById("time").innerHTML = timeString
       // console.log('Update at', date)
+
+      // Refresh whole page at 05:00:00
+      if (hours == '05' && minutes == '00' && seconds < 5) {
+        toggleBackgroundColor()
+      }
 
       // Looply update time.
       const timestamp = date.getTime()
