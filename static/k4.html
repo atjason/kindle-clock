@@ -84,7 +84,11 @@
       if (['08:58', '13:28', '20:58'].indexOf(timeString) >= 0) {
         showSecond = true
       } else if (['09:01', '13:31', '21:01'].indexOf(timeString) >= 0) {
-        showSecond = false
+        if (showSecond) {
+          showSecond = false
+          toggleBackgroundColor()
+          setTimeout("toggleBackgroundColor()", 2000)
+        }
       }
 
       if (showSecond) timeString += ':' + seconds
