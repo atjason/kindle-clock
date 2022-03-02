@@ -49,11 +49,11 @@
     function toggleBackgroundColor() {
       const style = document.body.style
 
-      if (style.backgroundColor == 'white') {
+      if (style.backgroundColor == 'black') {
+        style.backgroundColor = 'white'
+      } else {
         style.backgroundColor = 'black'
         return true
-      } else {
-        style.backgroundColor = 'white'
       }
     }
 
