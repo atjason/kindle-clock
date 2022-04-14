@@ -81,9 +81,9 @@
       const seconds = format(date.getSeconds())
       var timeString = hours + ':' + minutes
 
-      if (['08:58', '13:28', '20:58'].indexOf(timeString) >= 0) {
+      if (['08:58', '13:28', '20:58', '21:28', '22:28'].indexOf(timeString) >= 0) {
         showSecond = true
-      } else if (['09:01', '13:31', '21:01'].indexOf(timeString) >= 0) {
+      } else if (['09:01', '13:31', '21:01', '21:31', '22:31'].indexOf(timeString) >= 0) {
         if (showSecond) {
           showSecond = false
           toggleBackgroundColor()
