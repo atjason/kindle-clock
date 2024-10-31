@@ -115,21 +115,13 @@
       return xmlHttp.responseText;
     }
 
-    function filetime2Unixtime(filetime) {
-      const epoch_diff = 116444736000000000;
-      const rate_diff = 10000;
-      return parseInt((parseInt(filetime) - epoch_diff)/rate_diff);
-    }
-
     function calcTimeOffset() {
       const startTime = Date.now()
-      const timeUrl = 'http://worldclockapi.com/api/json/cst/now'
+      const timeUrl = 'https://api.mysubmail.com/service/timestamp'
+      // const timeUrl = 'https://api.submail.cn/service/timestamp'
+      // const timeUrl = 'https://acs.m.taobao.com/gw/mtop.common.getTimestamp/'
       const resultStr = httpGet(timeUrl)
-      // Seems Kindle 4 doesn't support JSON.parse
-      // const result = JSON.parse(resultStr)
-      // const fileTime = result.currentFileTime
-      const fileTime = resultStr.substr(167, 18)
-      const networkTimestamp = filetime2Unixtime(fileTime)
+      const networkTimestamp = resultStr.substring(13, 23) * 1000
       const networkDelay = (Date.now() - startTime) / 2
       return (networkTimestamp - startTime) - networkDelay
     }
